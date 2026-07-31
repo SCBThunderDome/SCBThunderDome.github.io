@@ -24,17 +24,47 @@
    advanced to yet sits in the repo INVISIBLE, and reveals the
    moment someone advances to that week.
 
-   EMPTY AT LAUNCH. Nothing has been transcribed yet, so the Top 25
-   tab renders its empty state and no rank badges appear on
-   schedules. That is a clean, deliberate state — not an error.
-   Use `node tools/top25.js` to add a week from a screenshot.
+   Week 1 was transcribed 2026-07-31 with `node tools/top25.js`.
+   Three league teams are ranked in it — Houston 21, SMU 22 and
+   Louisville 24 — and those ranks match the badges already visible
+   on the schedule screenshots, which is a useful independent check
+   that the transcription is right.
 
-   Note the preseason ranks visible in the Week 0-13 schedule
-   screenshots (SMU 22, Louisville 24, Houston 21) come from the
-   in-game poll and are NOT recorded here; enter a real week block
-   rather than reconstructing ranks from schedule rows.
+   Add later weeks the same way. Never hand-edit an existing block:
+   see the frozen-history rule above and in tools/top25.js.
 
-   Shape, once there's data:
+   Shape:
      { week: 0, teams: [{ rank: 1, team: "Georgia", record: "0-0" }, ...] }
    ------------------------------------------------------------ */
-const TOP25 = [];
+const TOP25 = [
+  {
+    week: 1,
+    teams: [
+      { rank: 1, team: "Ohio State", record: "0-0" },
+      { rank: 2, team: "Oregon", record: "0-0" },
+      { rank: 3, team: "Notre Dame", record: "0-0" },
+      { rank: 4, team: "Georgia", record: "0-0" },
+      { rank: 5, team: "Indiana", record: "0-0" },
+      { rank: 6, team: "Miami", record: "0-0" },
+      { rank: 7, team: "Texas", record: "0-0" },
+      { rank: 8, team: "Texas A&M", record: "0-0" },
+      { rank: 9, team: "Ole Miss", record: "0-0" },
+      { rank: 10, team: "Oklahoma", record: "0-0" },
+      { rank: 11, team: "LSU", record: "0-0" },
+      { rank: 12, team: "BYU", record: "0-0" },
+      { rank: 13, team: "Alabama", record: "0-0" },
+      { rank: 14, team: "Michigan", record: "0-0" },
+      { rank: 15, team: "USC", record: "1-0" },
+      { rank: 16, team: "Texas Tech", record: "0-0" },
+      { rank: 17, team: "Penn State", record: "0-0" },
+      { rank: 18, team: "Iowa", record: "0-0" },
+      { rank: 19, team: "Utah", record: "0-0" },
+      { rank: 20, team: "Tennessee", record: "0-0" },
+      { rank: 21, team: "Houston", record: "0-0" },
+      { rank: 22, team: "SMU", record: "0-0" },
+      { rank: 23, team: "Washington", record: "0-0" },
+      { rank: 24, team: "Louisville", record: "0-0" },
+      { rank: 25, team: "Florida", record: "0-0" },
+    ],
+  },
+];
