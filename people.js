@@ -82,10 +82,12 @@ const SITE_LEAGUES = [
    lower than that just returns the same cached answer.
    ------------------------------------------------------------ */
 const LIVE_STATUS = {
-  /* Blank until the Thunderdome Twitch Worker exists — script.js then
-     skips the fetch entirely and roster cards render without badges.
-     Never point this at the NCAA Legends Worker. */
-  endpoint: "",
+  /* The Thunderdome's own Worker — NOT the NCAA Legends one, which
+     is a different Worker on the same Cloudflare account and has
+     this site's origin missing from its ALLOWED_ORIGINS.
+     Verified 2026-07-31: returns {"live":[],"checked":2} with no
+     error, so the Twitch credentials resolve. */
+  endpoint: "https://scb-thunderdome-live.westfall-105.workers.dev",
   refreshSeconds: 120,
 };
 

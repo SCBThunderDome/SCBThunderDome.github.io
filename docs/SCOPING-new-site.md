@@ -259,7 +259,7 @@ empty states.
 | **A. Skeleton** | Copy engine + tooling, rewrite slugs, redirect root, palette swap | Site loads locally | **Done** |
 | **B. Content** | Roster into `league-data.js`; all 26 screenshots transcribed; H2H cross-checked | Needs items 1–3 above | **Done** |
 | **C. Publish** | Pages on, OG images generated, meta tags/canonical correct | Live at scbthunderdome.github.io | **Assets done; Pages not enabled** |
-| **D. Twitch** | New Twitch app + live Worker, endpoint wired | Needs items 2–3 in §3 | Not started |
+| **D. Twitch** | New Twitch app + live Worker, endpoint wired | Needs items 2–3 in §3 | **Done** — `scb-thunderdome-live.westfall-105.workers.dev` |
 | **E. Admin** | PAT, admin Worker, access codes, both workflows | Needs items 4–6 | Code ready, credentials pending |
 | **F. Discord** | Webhook, coach IDs, `DISCORD_CONFIG`, dry-run advance + nudge | Needs items 7–9 | Coach IDs in; webhook pending |
 
