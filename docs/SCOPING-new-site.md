@@ -100,13 +100,25 @@ to the Thunderdome repo. **Status as of 2026-07-31.**
 | 4 | Fine-grained GitHub PAT, Contents: R/W, **this repo only** | GitHub | 5 min | **Done** |
 | 5 | Worker `scb-thunderdome-admin` | Cloudflare | 5 min | **Done** — endpoint wired |
 | 6 | Access codes for commissioners | `tools/make-codes.cmd` | 5 min | **Done** — 3 issued |
-| 7 | Discord webhook for the Thunderdome channel | Discord server settings | 3 min | **To do** |
-| 8 | `DISCORD_CONFIG` repo secret | GitHub secrets | 3 min | **To do** (needs 7) |
+| 7 | Discord webhook for the Thunderdome channel | Discord server settings | 3 min | **Done** — in `tools/config.json` |
+| 8 | `DISCORD_CONFIG` repo secret | GitHub secrets | 3 min | **To do** — last item |
 
 Rows are ordered done-first; the original numbering is kept so earlier
-references still resolve. **Only the Discord chain (7→8) is left**,
-about 6 minutes. It doesn't block anything — the site is live and the
-admin page is wired.
+references still resolve. **One item left**: paste the contents of
+`tools/config.json` into a repo secret named `DISCORD_CONFIG`.
+
+Until that secret exists the **daily-nudge workflow fails every
+morning** — it `exit 1`s rather than skipping quietly, so it sends a
+red-run email at 14:00 UTC. Harmless but noisy, and it stops the
+moment the secret is set.
+
+The web admin path is confirmed working end to end: commit
+`617a6a0 "SCB Thunderdome: Week 1 scores (via Ryan)"` was written by
+the Actions runner from a submission on the admin page — page →
+Worker → `repository_dispatch` → `apply.js` → commit → Pages.
+
+`roleMention` is set to `@everyone`, so each advance opens with a
+server-wide ping above the per-coach ones.
 
 Access codes were issued to RekenCrew, Ryan and Elton, all scoped to
 `scbthunderdome`. Add more by re-running `make-codes.cmd` and pasting
