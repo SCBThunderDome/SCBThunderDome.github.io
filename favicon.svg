@@ -1,0 +1,9 @@
+<!-- Placeholder mark: borough blue disc, green hill, white "T".
+     Replace with the real logo when Josh sends the file — see
+     docs/SCOPING-new-site.md section 5. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="6" fill="#060b16"/>
+  <path d="M4 22a12 12 0 0 1 24 0z" fill="#3fa34d"/>
+  <circle cx="16" cy="13" r="8" fill="#3aa9c9"/>
+  <path d="M11 9h10v3h-3.5v9h-3v-9H11z" fill="#f2f4f8"/>
+</svg>

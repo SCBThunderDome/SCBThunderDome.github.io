@@ -1,0 +1,33 @@
+{
+  "_comment": "Copy this to config.json and fill it in. config.json is gitignored because the webhook URL is a secret - anyone holding it can post to your channel as the bot. The same file contents also go into the DISCORD_CONFIG repo secret so GitHub Actions can post; see worker/ADMIN-SETUP.md. Strip these _comment keys or leave them - the tools ignore unknown keys.",
+
+  "_comment_leagues": "Per-league webhook. The key must match the league slug.",
+  "leagues": {
+    "scbthunderdome": {
+      "webhookUrl": "PASTE_YOUR_DISCORD_WEBHOOK_URL_HERE"
+    }
+  },
+
+  "_comment_roleMention": "Optional. id = a role ID to ping at the top of each announcement. Set everyone to \"true\" to use @everyone instead. Leave both blank for no blanket ping.",
+  "roleMention": {
+    "id": "",
+    "everyone": ""
+  },
+
+  "_comment_coaches": "Keys must match the `name` in league-data.js exactly (matching is case-insensitive). `id` is the numeric Discord user ID - Settings > Advanced > Developer Mode, then right-click a user > Copy ID. `username` is only a label to help you match rows; it is never used for pinging. A coach with no id still appears in the message as bold text instead of a ping, and advance.js warns by name on every run.",
+  "coaches": {
+    "Cros": { "id": "", "username": "" },
+    "Danny": { "id": "", "username": "" },
+    "Trey": { "id": "", "username": "" },
+    "Andrew": { "id": "", "username": "" },
+    "Craig": { "id": "", "username": "" },
+    "Elton": { "id": "", "username": "" },
+    "Jake": { "id": "", "username": "" },
+    "John": { "id": "", "username": "" },
+    "Richard": { "id": "", "username": "" },
+    "Toure": { "id": "", "username": "" },
+    "Traven": { "id": "", "username": "" },
+    "Tristan": { "id": "", "username": "" },
+    "Zach": { "id": "", "username": "" }
+  }
+}

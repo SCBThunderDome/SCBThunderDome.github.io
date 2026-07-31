@@ -1,0 +1,265 @@
+# Commissioner tools — setup
+
+One-time setup, ~20 minutes. Until you finish it the admin page
+loads but says it isn't connected to its server yet. Nothing else on
+the site is affected at any point.
+
+What you're setting up: a page at `scbthunderdome.github.io/admin/`
+where the 1-star and 3-star commissioners enter scores and advance
+weeks themselves, without installing anything and without a GitHub
+account.
+
+## How the pieces fit
+
+```
+  admin page  ──►  Cloudflare Worker  ──►  GitHub Actions  ──►  Pages
+  (static)         (holds the token)      (runs the tools)     (live site)
+```
+
+The page can't commit — it's static, and a token in front-end
+JavaScript is a published token. So it asks the Worker, which holds
+the token and checks the caller's access code. The Worker doesn't
+edit files either; it triggers the **League update** workflow, which
+runs `tools/apply.js` → the same `scores.js` and `advance.js` you run
+locally. One set of file-editing logic, two ways to reach it.
+
+The practical upshot: **nothing that comes through the web can do
+anything the command-line tools can't.** Same guardrails, same
+surgical edits, same refusal to touch a bye week.
+
+---
+
+## 1. Create the GitHub token
+
+The Worker needs permission to trigger the workflow.
+
+1. GitHub → **Settings** → **Developer settings** → **Personal access
+   tokens** → **Fine-grained tokens** → **Generate new token**
+2. Name: `scb-thunderdome-admin`
+3. **Repository access** → *Only select repositories* →
+   `SCBThunderDome/SCBThunderDome.github.io`
+4. **Permissions** → *Repository permissions* → **Contents: Read and
+   write**. That one permission is what allows `repository_dispatch`.
+   Leave everything else alone.
+5. Set an expiry you'll actually notice — a year is reasonable. Put a
+   reminder in your calendar; when it lapses the page starts saying
+   "Couldn't reach GitHub" and the cause is not obvious.
+
+Copy the token. It's shown once.
+
+## 2. Generate access codes
+
+**Double-click `tools/make-codes.cmd`.** It asks for a name and which
+leagues that person runs, one person at a time, and prints both the
+JSON to paste into Cloudflare and each person's individual code.
+
+```
+  Name (blank when you're done): Dave
+  Which leagues?  [1] SCB Thunderdome
+  (type one or more, e.g. 1): 1
+  Added Dave — SCB Thunderdome.
+
+  Name (blank when you're done):
+```
+
+There is one league, so the answer is always `1`. The prompt is kept
+in this shape because it is what a second dynasty would slot into.
+
+Press Enter on a blank name to finish, and it prints:
+
+```json
+{"HP864-PZAMD-SGVT3-KWFZN":{"name":"Dave","leagues":["scbthunderdome"]},"EPK5G-7SZYR-AN2WM-EQ7CR":{"name":"Marcus","leagues":["scbthunderdome"]}}
+```
+
+That whole line is the value for `ACCESS_CODES` in step 4. Underneath
+it, the script lists each person with their own code, ready to send.
+
+**Adding someone later?** Run it again and paste your current
+`ACCESS_CODES` value when it asks. The new person is merged in and
+everyone's existing codes carry over unchanged — nobody gets locked
+out and nobody needs a new code.
+
+Nothing is written to disk. Copy what you need before closing the
+window; the codes can't be shown again, though re-running with the
+existing JSON pasted in is always available.
+
+### What the fields mean
+
+`name` is what appears in the commit message and the Actions log, so
+the history reads `SCB Thunderdome: Week 4 scores (via Dave)`. Use
+whatever you'd recognise at a glance.
+
+`leagues` is the authorisation. A code that doesn't list
+`scbthunderdome` can't do anything, and the Worker re-checks this on
+every request rather than trusting what the page sends. The only valid
+value today is `scbthunderdome`.
+
+**One code per person, not per league** — that's what makes the audit
+trail meaningful and what lets you revoke one person without
+disrupting anyone else.
+
+**The league can be both scored and advanced from the web.** An
+advance from the web posts the Discord week announcement itself — the
+same message `advance.cmd` posts locally. This depends on the
+`DISCORD_CONFIG` secret being set (step 4a below); without it an
+advance still updates the site but posts nothing.
+
+### If you'd rather do it by hand
+
+The format is just an object keyed by code:
+
+```json
+{
+  "SOME-LONG-RANDOM-CODE": { "name": "Dave", "leagues": ["scbthunderdome"] }
+}
+```
+
+The Worker refuses to start if any code is under 16 characters, since
+code length is the only thing really standing between the page and a
+brute-force attempt. The generated ones are 20 random characters from
+an alphabet with no `0`/`O` or `1`/`I`/`L`, because these get typed by
+hand on phones.
+
+## 3. Create the Worker
+
+1. Cloudflare dashboard → **Workers & Pages** → **Create** →
+   **Create Worker**
+2. Name it `scb-thunderdome-admin`, deploy the default hello-world
+3. **Edit code**, delete what's there, paste all of `admin-api.js`,
+   **Deploy**
+
+## 4. Add the secrets
+
+Worker → **Settings** → **Variables and Secrets**:
+
+| Name | Type | Value |
+|---|---|---|
+| `GITHUB_TOKEN` | Secret | the token from step 1 |
+| `ACCESS_CODES` | Secret | the JSON from step 2, all on one line |
+| `GITHUB_REPO` | Text | `SCBThunderDome/SCBThunderDome.github.io` |
+| `ALLOWED_ORIGINS` | Text | `https://scbthunderdome.github.io,http://localhost:8080` |
+
+Deploy again after adding these.
+
+`ALLOWED_ORIGINS` is what stops someone else's website from putting a
+form in front of your Worker. Unlike the Twitch worker, where it only
+protects a rate limit, here it's worth setting properly.
+
+## 5. Point the page at the Worker
+
+Copy the Worker URL and paste it into `admin/admin.js`:
+
+```js
+const ADMIN_API = "https://scb-thunderdome-admin.your-subdomain.workers.dev";
+```
+
+Commit and push. Done.
+
+## 6. Check it works
+
+Test the Worker directly first — this needs no browser:
+
+```
+curl -X POST https://scb-thunderdome-admin.<sub>.workers.dev/whoami \
+  -H "Content-Type: application/json" \
+  -d '{"code":"k3Jx9Qm2vLpR8tNwYc4hZA"}'
+```
+
+Expected: `{"name":"Dave","leagues":["scbthunderdome"]}`
+
+- `{"error":"That code wasn't recognised."}` — code doesn't match
+  `ACCESS_CODES`, or the JSON didn't save as one line
+- `{"error":"Server is misconfigured. Tell Josh."}` — `ACCESS_CODES`
+  isn't valid JSON, or a code is under 16 characters. The Worker's
+  live log (Cloudflare → your Worker → **Logs**) says which.
+
+Then open `/admin/`, sign in, and record one real score. Watch it in
+the repo's **Actions** tab — you'll see the run, what was submitted,
+and what it wrote.
+
+---
+
+## What the commissioners need to know
+
+Send them the URL and their code. That's the whole briefing. The page
+explains itself, but worth saying out loud:
+
+- **Blank means "not played yet", not 0–0.** They fill in the games
+  they've played and leave the rest alone.
+- **Changes take about a minute** to appear on the site. The page
+  says so after each save.
+- **A finished game is locked** until they click Edit and confirm.
+- **Advancing asks twice.** The second screen spells out what's about
+  to happen, including a warning if the week goes backwards or skips
+  ahead.
+
+## When something is rejected
+
+`apply.js` refuses rather than writing something wrong — a tie score,
+a team name that matches two games, a bye week with no opponent. The
+page catches most of these before sending, but when one gets through,
+the workflow run fails and **GitHub emails you**, not the person who
+submitted it. They'll just see the site not updating.
+
+That asymmetry is the one rough edge in this design. If it happens
+more than rarely, the fix is a status endpoint the page can poll —
+worth doing then, not worth building on spec.
+
+## Revoking access
+
+Remove the person's entry from `ACCESS_CODES` and redeploy. Takes
+about thirty seconds and affects nobody else. (`make-codes.cmd` adds
+people; removing one is a matter of deleting its `"CODE": {...}` pair
+from the value in Cloudflare.) If you think the
+**token** leaked rather than a code, delete it on GitHub and issue a
+new one — that's the credential that actually matters.
+
+## Discord announcements (the `DISCORD_CONFIG` secret)
+
+An advance through the admin page posts the week announcement to that
+league's Discord channel — the same message `advance.cmd` posts
+locally, with the same per-coach pings. This is already wired into the
+code (`doAdvance()` in `tools/apply.js` calls `advance.js`'s
+`buildMessage()` and `post()`); the one thing it needs is the webhooks
+and coach IDs, which live in `tools/config.json`. That file is
+gitignored — the workflow runner never sees it from a checkout — so it
+is handed to the runner through a **GitHub repository secret** instead.
+
+**One-time setup (~2 minutes):**
+
+1. GitHub → the repo → **Settings** → **Secrets and variables** →
+   **Actions** → **New repository secret**
+2. Name: `DISCORD_CONFIG`
+3. Value: paste the **entire contents of `tools/config.json`** — the
+   whole file, exactly as it is on your machine (webhooks, coach IDs
+   and all). One secret carries everything.
+4. **Add secret.**
+
+That's it. The **League update** workflow writes this secret back to
+`tools/config.json` on the runner before `apply.js` runs, so the web
+advance resolves webhooks and pings identically to a local one.
+
+**When you change `tools/config.json`** — a new webhook, a coach ID,
+a new member — update the `DISCORD_CONFIG` secret with the new file
+contents too, or the web path keeps using the old config. (Local
+advances read the file directly and are always current.)
+
+**If the secret is unset,** an advance still updates the site; it just
+posts nothing and says so in the Actions run. No error, no lost
+advance.
+
+**Taking one league off posting** without touching the others: blank
+that league's `webhookUrl` in the config (and re-save the secret).
+`apply.js` then advances the site for it and skips only its post.
+
+The mention logic, the 2000-character ceiling and the allowlist all
+come from `advance.js`'s `buildMessage`, shared with the local tool —
+see the mentions section of `tools/README.md` for why pings live in
+the message body rather than the embed.
+
+## Turning it off
+
+Blank the `ADMIN_API` value in `admin/admin.js` and push. The page
+then explains it isn't connected and can't send anything. To disable
+it completely, delete the Worker — the workflow can only be triggered
+by something holding the token.

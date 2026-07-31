@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCB Thunderdome</title>
+<meta name="description" content="SCB Thunderdome — an EA Sports College Football 27 online dynasty league. Schedule, power rankings, and roster.">
+
+<!-- ============================================================
+     ROOT REDIRECT — not a landing page
+     ------------------------------------------------------------
+     NCAA Legends serves a league picker here because it runs three
+     dynasties. This site runs one, so there is nothing to pick and
+     the root just forwards to it.
+
+     WHY THE LEAGUE ISN'T SIMPLY AT THE ROOT
+     script.js, week-core.js and the league's own index.html all
+     reference shared assets one level up ("../style.css"). Hoisting
+     the league to the root would mean rewriting those paths for no
+     visible gain. Keeping the folder also means a second dynasty
+     later is a new folder plus one line in SITE_LEAGUES — which is
+     the property this codebase was built around.
+
+     BOTH a meta refresh and a script: the meta tag works with
+     JavaScript disabled and for crawlers, the script fires faster and
+     uses replace() so the back button doesn't bounce the visitor
+     straight back here.
+
+     The canonical points at the league, not at this page, so shared
+     links and search results resolve to the real content.
+     ============================================================ -->
+<meta http-equiv="refresh" content="0; url=./scbthunderdome/">
+<link rel="canonical" href="https://scbthunderdome.github.io/scbthunderdome/">
+
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SCB Thunderdome">
+<meta property="og:title" content="SCB Thunderdome">
+<meta property="og:description" content="EA Sports College Football 27 online dynasty. Schedule, power rankings, and the coach roster.">
+<meta property="og:url" content="https://scbthunderdome.github.io/">
+<meta property="og:image" content="https://scbthunderdome.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SCB Thunderdome">
+<meta name="twitter:description" content="EA Sports College Football 27 online dynasty. Schedule, power rankings, and the coach roster.">
+<meta name="twitter:image" content="https://scbthunderdome.github.io/og-image.png">
+<meta name="theme-color" content="#060b16">
+
+<style>
+  /* Self-contained. Loading style.css here would be a second render
+     for a page nobody sees for more than a moment. */
+  html, body {
+    height: 100%;
+    margin: 0;
+    background: #060b16;
+    color: #e8eef7;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .r {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    text-align: center;
+    padding: 1rem;
+  }
+  .r p { margin: 0; opacity: 0.7; font-size: 0.95rem; }
+  .r a { color: #3aa9c9; }
+</style>
+</head>
+<body>
+
+<div class="r">
+  <p>Taking you to SCB Thunderdome&hellip;</p>
+  <p><a href="./scbthunderdome/">Continue</a></p>
+</div>
+
+<script>
+  /* replace(), not assign(): a visitor who lands here and then hits
+     Back should go wherever they came from, not be redirected again. */
+  location.replace("./scbthunderdome/");
+</script>
+</body>
+</html>
