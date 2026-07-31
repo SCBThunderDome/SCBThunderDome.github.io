@@ -21,10 +21,14 @@
    Leave it blank and the page will say so instead of failing with
    a network error nobody can interpret.
    ------------------------------------------------------------ */
-/* Blank until the Thunderdome admin Worker exists. The page says so
-   and sends nothing; see worker/ADMIN-SETUP.md. Never point this at
-   the NCAA Legends Worker — different repo, different access codes. */
-const ADMIN_API = "";
+/* The Thunderdome's own admin Worker. Never point this at the NCAA
+   Legends Worker — different repo, different token, different access
+   codes; a code from one is meaningless to the other.
+
+   Blanking this is the kill switch: the page then explains it isn't
+   connected and sends nothing, rather than erroring at a
+   commissioner. See worker/ADMIN-SETUP.md. */
+const ADMIN_API = "https://scb-thunderdome-admin.westfall-105.workers.dev/";
 
 /* ------------------------------------------------------------
    STATE

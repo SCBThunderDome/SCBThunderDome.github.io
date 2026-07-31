@@ -97,16 +97,21 @@ to the Thunderdome repo. **Status as of 2026-07-31.**
 | 2 | Twitch application (client ID + secret) | dev.twitch.tv/console | 5 min | **Done** |
 | 3 | Worker `scb-thunderdome-live` | Cloudflare | 5 min | **Done** |
 | 9 | Coach Discord IDs for the new roster | Discord, Developer Mode | ~15 min | **Done** — 13/13 |
-| 4 | Fine-grained GitHub PAT, Contents: R/W, **this repo only** | GitHub | 5 min | **To do** |
-| 5 | Worker `scb-thunderdome-admin` | Cloudflare | 5 min | **To do** (needs 4) |
-| 6 | Access codes for commissioners | `tools/make-codes.cmd` | 5 min | **To do** (needs 5) |
+| 4 | Fine-grained GitHub PAT, Contents: R/W, **this repo only** | GitHub | 5 min | **Done** |
+| 5 | Worker `scb-thunderdome-admin` | Cloudflare | 5 min | **Done** — endpoint wired |
+| 6 | Access codes for commissioners | `tools/make-codes.cmd` | 5 min | **Done** — 3 issued |
 | 7 | Discord webhook for the Thunderdome channel | Discord server settings | 3 min | **To do** |
 | 8 | `DISCORD_CONFIG` repo secret | GitHub secrets | 3 min | **To do** (needs 7) |
 
 Rows are ordered done-first; the original numbering is kept so earlier
-references still resolve. **Roughly 20 minutes of work left**, in two
-independent chains: 4→5→6 (web admin) and 7→8 (Discord). Neither
-blocks the other, and neither blocks the site, which is already live.
+references still resolve. **Only the Discord chain (7→8) is left**,
+about 6 minutes. It doesn't block anything — the site is live and the
+admin page is wired.
+
+Access codes were issued to RekenCrew, Ryan and Elton, all scoped to
+`scbthunderdome`. Add more by re-running `make-codes.cmd` and pasting
+the current `ACCESS_CODES` value when prompted; existing codes carry
+over unchanged.
 
 `ALLOWED_ORIGINS` on both Workers must read
 `https://scbthunderdome.github.io` — copying the NCAA Legends value
