@@ -88,28 +88,39 @@ access code.
 Nothing below is copyable — each is a fresh credential or account tied
 to the Thunderdome repo.
 
-| # | Thing | Where | Who does it | Est. |
+Nothing below is copyable — each is a fresh credential or account tied
+to the Thunderdome repo. **Status as of 2026-07-31.**
+
+| # | Thing | Where | Est. | Status |
 |---|---|---|---|---|
-| 1 | GitHub Pages enabled on the repo | GitHub settings | Josh | 2 min |
-| 2 | Twitch application (client ID + secret) | dev.twitch.tv/console | Josh | 5 min |
-| 3 | Worker `scb-thunderdome-live` | Cloudflare | Josh (paste `live-status.js`) | 5 min |
-| 4 | Fine-grained GitHub PAT, Contents: R/W, **this repo only** | GitHub | Josh | 5 min |
-| 5 | Worker `scb-thunderdome-admin` | Cloudflare | Josh (paste `admin-api.js`) | 5 min |
-| 6 | Access codes for Thunderdome commissioners | `tools/make-codes.cmd` | Josh | 5 min |
-| 7 | Discord webhook for the Thunderdome channel | Discord server settings | Josh | 3 min |
-| 8 | `DISCORD_CONFIG` repo secret (webhook + coach IDs) | GitHub secrets | Josh | 3 min |
-| 9 | Coach Discord IDs for the new roster | Discord, Developer Mode | Josh | ~15 min |
+| 1 | GitHub Pages enabled on the repo | GitHub settings | 2 min | **Done** — live |
+| 2 | Twitch application (client ID + secret) | dev.twitch.tv/console | 5 min | **Done** |
+| 3 | Worker `scb-thunderdome-live` | Cloudflare | 5 min | **Done** |
+| 9 | Coach Discord IDs for the new roster | Discord, Developer Mode | ~15 min | **Done** — 13/13 |
+| 4 | Fine-grained GitHub PAT, Contents: R/W, **this repo only** | GitHub | 5 min | **To do** |
+| 5 | Worker `scb-thunderdome-admin` | Cloudflare | 5 min | **To do** (needs 4) |
+| 6 | Access codes for commissioners | `tools/make-codes.cmd` | 5 min | **To do** (needs 5) |
+| 7 | Discord webhook for the Thunderdome channel | Discord server settings | 3 min | **To do** |
+| 8 | `DISCORD_CONFIG` repo secret | GitHub secrets | 3 min | **To do** (needs 7) |
+
+Rows are ordered done-first; the original numbering is kept so earlier
+references still resolve. **Roughly 20 minutes of work left**, in two
+independent chains: 4→5→6 (web admin) and 7→8 (Discord). Neither
+blocks the other, and neither blocks the site, which is already live.
 
 `ALLOWED_ORIGINS` on both Workers must read
 `https://scbthunderdome.github.io` — copying the NCAA Legends value
 would leave the Workers callable from the wrong origin and, worse,
-silently break CORS on the right one.
+silently break CORS on the right one. **This is the one setting that
+can't be verified from outside**: if live badges never appear on the
+deployed site but the Worker URL works when opened directly in a
+browser, this is the cause.
 
-**Access codes are league-scoped**, so `make-codes.js`'s league menu
-(currently `1star / 3star / main`) gets rewritten to this site's single
-slug. Same for `SCORE_LEAGUES` / `ADVANCE_LEAGUES` in `apply.js`,
+**Access codes are league-scoped.** `make-codes.js`'s league menu, the
+`SCORE_LEAGUES` / `ADVANCE_LEAGUES` lists in `apply.js`,
 `admin/admin.js` and `worker/admin-api.js`, and the `LEAGUES` table in
-`tools/lib/league.js`.
+`tools/lib/league.js` were all rewritten to the single
+`scbthunderdome` slug during phase A.
 
 ---
 
