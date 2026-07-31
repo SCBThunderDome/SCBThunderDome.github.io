@@ -90,7 +90,7 @@ const TEAM_SCHEDULES = [
     conference: "ACC",
     weeks: [
       { week: 0, note: "BYE" },
-      { week: 1, opponent: "Florida State", location: "at" },
+      { week: 1, opponent: "Florida State", location: "at", teamScore: 56, opponentScore: 7 },
       { week: 2, opponent: "FCS Midwest", location: "vs" },
       { week: 3, opponent: "Louisville", location: "at" },
       { week: 4, opponent: "Missouri State", location: "vs" },
