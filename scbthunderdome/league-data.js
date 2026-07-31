@@ -90,7 +90,7 @@ const COACHES = [
   { name: "John",    team: "Arizona State",  conference: "XII", color: "#B5486B", twitch: "https://www.twitch.tv/backeru369",     espnId: "9" },  // "ASU" on the sheet; Arizona State confirmed by Josh. espnId UNVERIFIED
   { name: "Richard", team: "Houston",        conference: "XII", color: "#CB3B47", twitch: "",                                     espnId: "248" },  // No Twitch on file yet — Josh to supply. espnId UNVERIFIED
   { name: "Toure",   team: "Colorado",       conference: "XII", color: "#CFB87C", twitch: "https://www.twitch.tv/psualum10",      espnId: "38" },
-  { name: "Traven",  team: "Missouri",       conference: "SEC", color: "#F5C542", twitch: "",                                     espnId: "142" },  // No Twitch on file yet — Josh to supply. espnId UNVERIFIED
+  { name: "Traven",  team: "Missouri",       conference: "SEC", color: "#F5C542", twitch: "https://www.twitch.tv/travennn95",     espnId: "142" },  // espnId UNVERIFIED
   { name: "Tristan", team: "Wisconsin",      conference: "B1G", color: "#D63B45", twitch: "https://www.twitch.tv/tristanklinefelter", espnId: "275" },
   { name: "Zach",    team: "South Carolina", conference: "SEC", color: "#A6192E", twitch: "https://www.twitch.tv/coachlawless",   espnId: "2579" },
 ];

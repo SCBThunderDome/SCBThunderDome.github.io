@@ -199,9 +199,10 @@ as-is or as color inspiration only.
 5. **The logo file** — for the real favicon, apple-touch-icon and OG
    cards. Generated placeholders in the borough colours are in place,
    so nothing is broken meanwhile.
-6. **Twitch URLs for Traven and Richard** — both blank. A coach with no
-   link is never asked about by the live Worker, so this blocks
-   nothing and can land any time.
+6. **Twitch URL for Richard** — still blank; a coach with no link is
+   never asked about by the live Worker, so this blocks nothing.
+   ~~Traven~~ landed 2026-07-31 (`travennn95`), replacing the earlier
+   copy-paste that duplicated Tristan's channel. 12 of 13 now.
 7. **espnId verification** — 7 of 13 ids are my best guess rather than
    lifted from verified NCAA Legends entries. Open `/logo-check.html`
    and eyeball them; a wrong id silently renders another school's
@@ -241,10 +242,10 @@ school's logo.
 
 1. ~~**"ASU" is ambiguous**~~ — **Arizona State**, confirmed by Josh and
    corroborated by the schedule screenshot, which spells it in full.
-2. ~~**Traven and Tristan share a Twitch URL**~~ — that channel is
-   Tristan's. Traven's is **blank** pending a real one from Josh, which
-   is the correct state: a shared URL would have lit both coaches' live
-   badges whenever one streamed.
+2. ~~**Traven and Tristan share a Twitch URL**~~ — that channel was
+   Tristan's. Traven's real one (`travennn95`) landed 2026-07-31.
+   Holding his blank in the meantime was the right call: the shared
+   URL would have lit both coaches' live badges whenever one streamed.
 3. **Richard has no Twitch URL** — also blank, also fine. A coach with
    no link is simply never asked about by the live Worker.
 
