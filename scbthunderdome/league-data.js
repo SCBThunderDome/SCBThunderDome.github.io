@@ -33,7 +33,7 @@ const SEASON = {
 
   currentWeek: 1,
   statusLine: "WEEK 1",
-  nextAdvance: "",
+  nextAdvance: "Monday, August 3 — 11:00 PM EDT",
 };
 
 /* ------------------------------------------------------------
