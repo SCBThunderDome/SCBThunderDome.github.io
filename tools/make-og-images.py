@@ -99,12 +99,19 @@ def build(tag, subline, accent, chips):
     d.polygon([(W, H), (W, H - 120), (W - 120, H)], fill=accent)  # corner flag
 
     f_badge = ImageFont.truetype(MONO_FONT, 25)
-    f_ncaa = ImageFont.truetype(DISPLAY_FONT, 138)
-    # "THUNDERDOME" is 11 characters where the original word was 7, so
-    # it is set smaller to keep the same right-hand margin.
-    f_legends = ImageFont.truetype(DISPLAY_FONT, 112)
-    f_tag = ImageFont.truetype(MONO_FONT, 27)
-    f_sub = ImageFont.truetype(MONO_FONT, 24)
+    f_tag = ImageFont.truetype(MONO_FONT, 31)
+
+    # Shrink the subline until it clears the right margin instead of
+    # trusting a hand-picked size. The strings are configurable at the
+    # top of this file, so a longer one must not silently run off the
+    # card - which is exactly what happened at 26px.
+    TEXT_X, RIGHT_MARGIN = 608, 56
+    for pt in range(26, 13, -1):
+        f_sub = ImageFont.truetype(MONO_FONT, pt)
+        if TEXT_X + d.textlength(subline, font=f_sub) <= W - RIGHT_MARGIN:
+            break
+    else:
+        print(f"  WARNING: subline still overflows at {pt}pt")
 
     # Badge, top right — a parallelogram matching .league-badge.
     label = "EA COLLEGE FOOTBALL 27"
@@ -116,25 +123,34 @@ def build(tag, subline, accent, chips):
     )
     d.text((bx1 + 22, by1 + 10), label, font=f_badge, fill=NAVY_DEEP)
 
-    # The // mark, drawn as two slanted bars rather than glyphs so the
-    # angle matches the site exactly.
-    for i in range(2):
-        x = 104 + i * 46
-        d.polygon(
-            [(x + 30, 196), (x + 62, 196), (x + 32, 306), (x, 306)], fill=accent
-        )
+    # The reversed lockup: dome plus white wordmark, already knocked
+    # out and clipped by tools/make-logo-assets.py. Rendering that
+    # asset beats reproducing the knockout here - an earlier version
+    # flood filled the white backing away at card build time, which
+    # worked but had to be cropped above the ground band or it ate the
+    # windows. Doing it once, in the logo pipeline, is safer.
+    lockup = None
+    try:
+        import cairosvg, io
+        png = cairosvg.svg2png(
+            url=os.path.join(ROOT, "logo-reverse.svg"), output_width=1400)
+        lockup = Image.open(io.BytesIO(png)).convert("RGBA")
+        lockup.thumbnail((470, 470), Image.LANCZOS)
+    except Exception as e:
+        print(f"  (logo-reverse.svg not rendered: {e}; text only card)")
 
-    d.text((210, 178), "SCB", font=f_ncaa, fill=CHALK)
-    d.text((210, 322), "THUNDERDOME", font=f_legends, fill=accent)
+    if lockup is not None:
+        img.paste(lockup, (96, (H - lockup.height) // 2 - 20), lockup)
 
-    d.text((212, 466), tag, font=f_tag, fill=STEEL)
-    d.text((212, 508), subline, font=f_sub, fill=STEEL)
+
+    d.text((TEXT_X, 268), tag, font=f_tag, fill=CHALK)
+    d.text((TEXT_X, 320), subline, font=f_sub, fill=STEEL)
 
     # Two angled chips in the mark's two colours — a small nod to the
     # borough logo without trying to redraw it at this size.
     for i, c in enumerate(chips):
-        x = 212 + i * 58
-        d.polygon([(x + 8, 560), (x + 46, 560), (x + 38, 574), (x, 574)], fill=c)
+        x = TEXT_X + i * 58
+        d.polygon([(x + 8, 372), (x + 46, 372), (x + 38, 386), (x, 386)], fill=c)
 
     return img
 
