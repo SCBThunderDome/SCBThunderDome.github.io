@@ -68,7 +68,7 @@ const TEAM_SCHEDULES = [
     conference: "ACC",
     weeks: [
       { week: 0, note: "BYE" },
-      { week: 1, opponent: "Ole Miss", location: "vs" },
+      { week: 1, opponent: "Ole Miss", location: "vs", teamScore: 24, opponentScore: 55 },
       { week: 2, opponent: "FCS Southeast", location: "vs" },
       { week: 3, opponent: "SMU", location: "vs" },
       { week: 4, opponent: "Wake Forest", location: "vs" },
