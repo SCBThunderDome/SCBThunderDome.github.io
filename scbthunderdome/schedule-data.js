@@ -136,7 +136,7 @@ const TEAM_SCHEDULES = [
     conference: "ACC",
     weeks: [
       { week: 0, note: "BYE" },
-      { week: 1, opponent: "FCS East", location: "vs" },
+      { week: 1, opponent: "FCS East", location: "vs", teamScore: 31, opponentScore: 10 },
       { week: 2, opponent: "Old Dominion", location: "vs" },
       { week: 3, opponent: "Maryland", location: "at" },
       { week: 4, opponent: "Boston College", location: "at" },
@@ -160,7 +160,7 @@ const TEAM_SCHEDULES = [
     conference: "SEC",
     weeks: [
       { week: 0, note: "BYE" },
-      { week: 1, opponent: "FCS Southeast", location: "vs" },
+      { week: 1, opponent: "FCS Southeast", location: "vs", teamScore: 52, opponentScore: 21 },
       { week: 2, opponent: "Alabama", location: "vs" },
       { week: 3, opponent: "Texas A&M", location: "at" },
       { week: 4, opponent: "South Alabama", location: "vs" },
@@ -250,7 +250,7 @@ const TEAM_SCHEDULES = [
     conference: "XII",
     weeks: [
       { week: 0, note: "BYE" },
-      { week: 1, opponent: "Georgia Tech", location: "at" },
+      { week: 1, opponent: "Georgia Tech", location: "at", teamScore: 10, opponentScore: 17 },
       { week: 2, opponent: "FCS Midwest", location: "vs" },
       { week: 3, opponent: "Northwestern", location: "at" },
       { week: 4, opponent: "Baylor", location: "at" },
@@ -272,7 +272,7 @@ const TEAM_SCHEDULES = [
     conference: "XII",
     weeks: [
       { week: 0, note: "BYE" },
-      { week: 1, opponent: "Oregon State", location: "vs" },
+      { week: 1, opponent: "Oregon State", location: "vs", teamScore: 36, opponentScore: 0 },
       { week: 2, opponent: "FCS Midwest", location: "vs" },
       { week: 3, opponent: "Texas Tech", location: "at" },
       { week: 4, opponent: "Georgia Southern", location: "at" },
@@ -320,7 +320,7 @@ const TEAM_SCHEDULES = [
     conference: "B1G",
     weeks: [
       { week: 0, note: "BYE" },
-      { week: 1, opponent: "Notre Dame", location: "at" },
+      { week: 1, opponent: "Notre Dame", location: "at", teamScore: 21, opponentScore: 51 },
       { week: 2, opponent: "FCS Midwest", location: "vs" },
       { week: 3, opponent: "Eastern Michigan", location: "vs" },
       { week: 4, opponent: "Penn State", location: "at" },
