@@ -228,7 +228,7 @@ const TEAM_SCHEDULES = [
     conference: "XII",
     weeks: [
       { week: 0, note: "BYE" },
-      { week: 1, opponent: "FCS Midwest", location: "vs" },
+      { week: 1, opponent: "FCS Midwest", location: "vs", teamScore: 41, opponentScore: 13 },
       { week: 2, opponent: "Texas A&M", location: "at" },
       { week: 3, opponent: "Kansas", location: "at" },
       { week: 4, note: "BYE" },
@@ -294,7 +294,7 @@ const TEAM_SCHEDULES = [
     conference: "XII",
     weeks: [
       { week: 0, note: "BYE" },
-      { week: 1, opponent: "Tulsa", location: "at" },
+      { week: 1, opponent: "Tulsa", location: "at", teamScore: 44, opponentScore: 0 },
       { week: 2, opponent: "Oregon", location: "vs" },
       { week: 3, opponent: "FCS Midwest", location: "vs" },
       { week: 4, opponent: "West Virginia", location: "at" },
@@ -345,7 +345,7 @@ const TEAM_SCHEDULES = [
     conference: "AAC",
     weeks: [
       { week: 0, note: "BYE" },
-      { week: 1, opponent: "Duke", location: "at" },
+      { week: 1, opponent: "Duke", location: "at", teamScore: 27, opponentScore: 31 },
       { week: 2, opponent: "South Alabama", location: "vs" },
       { week: 3, opponent: "Kansas State", location: "at" },
       { week: 4, opponent: "Southern Mississippi", location: "vs" },
