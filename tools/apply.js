@@ -4,7 +4,8 @@
    ------------------------------------------------------------
    The bridge between the web admin page and the existing tools.
    Reads a JSON payload from disk and performs exactly one action:
-   record scores, or advance the week.
+   record scores, advance the week, or change the deadline the site
+   shows without touching the week at all.
 
      node tools/apply.js payload.json
 
@@ -53,7 +54,7 @@ const {
   top25GateError,
 } = require("./lib/league");
 const { applyScores, parseSet, scoreableGames } = require("./scores");
-const { updateSeason, buildMessage, post, webhookUrl } = require("./advance");
+const { updateSeason, updateNextAdvance, buildMessage, post, webhookUrl } = require("./advance");
 
 /* Read tools/config.json (which on the Actions runner IS the
    DISCORD_CONFIG secret, written there by the workflow) WITHOUT the
@@ -92,8 +93,18 @@ const ADVANCE_LEAGUES = ["scbthunderdome"];
    for the "is this even a web league" check and error text. */
 const ALLOWED_LEAGUES = [...new Set([...SCORE_LEAGUES, ...ADVANCE_LEAGUES])];
 
+/* "deadline" rides on ADVANCE_LEAGUES rather than getting a list of
+   its own: it edits the same SEASON block an advance does, just one
+   field of it, so anywhere the week can be advanced from the web the
+   deadline can also be nudged from the web. */
 function leaguesForAction(action) {
-  return action === "advance" ? ADVANCE_LEAGUES : SCORE_LEAGUES;
+  return action === "advance" || action === "deadline" ? ADVANCE_LEAGUES : SCORE_LEAGUES;
+}
+
+function verbFor(action) {
+  if (action === "advance") return "advanced";
+  if (action === "deadline") return "rescheduled";
+  return "scored";
 }
 
 const MAX_ENTRIES = 40; // a 16-team league has at most ~16 games/week
@@ -139,15 +150,15 @@ function validate(payload) {
   }
 
   const action = payload.action;
-  if (action !== "scores" && action !== "advance") {
-    bad(`unknown action "${action}" — expected "scores" or "advance"`);
+  if (action !== "scores" && action !== "advance" && action !== "deadline") {
+    bad(`unknown action "${action}" — expected "scores", "advance" or "deadline"`);
   }
 
   const league = payload.league;
   const permitted = leaguesForAction(action);
   if (!permitted.includes(league)) {
     bad(
-      `league "${league}" cannot be ${action === "advance" ? "advanced" : "scored"} ` +
+      `league "${league}" cannot be ${verbFor(action)} ` +
         `this way. Allowed: ${permitted.join(", ")}`
     );
   }
@@ -200,6 +211,20 @@ function validate(payload) {
     }
     out.next = payload.next === undefined ? undefined : requireSafeText(payload.next, "next");
     out.status = payload.status === undefined ? undefined : requireSafeText(payload.status, "status");
+  }
+
+  if (action === "deadline") {
+    /* The one field this action exists to change, and the only one it
+       may touch. An empty string is legitimate — that's how the badge
+       gets hidden when there's no date to give yet — so this doesn't
+       go through requireSafeText(), which rejects empty. */
+    if (typeof payload.next !== "string") bad("next must be a string");
+    const next = payload.next.trim();
+    if (next.length > MAX_TEXT_LEN) bad(`next is longer than ${MAX_TEXT_LEN} characters`);
+    if (!SAFE_TEXT.test(next)) {
+      bad("next contains characters that aren't allowed (letters, numbers and basic punctuation only)");
+    }
+    out.next = next;
   }
 
   return out;
@@ -260,6 +285,40 @@ function doScores(p, L) {
     changed: true,
     commit: `${L.label}: ${weekLabel(p.week)} scores (via ${p.actor})`,
     summary: answered.join("; "),
+  };
+}
+
+/* ------------------------------------------------------------
+   DEADLINE — move the date without moving the week
+   ------------------------------------------------------------
+   Scheduling slips. Somebody's out Tuesday, the sim gets pushed to
+   Thursday, and until now the only way to say so on the site was to
+   run an advance — which also bumps the week and pings the whole
+   Discord. This writes nextAdvance and nothing else, and deliberately
+   posts nowhere: a date that moves twice in a week shouldn't ping
+   sixteen people twice in a week. The badge on the site is the
+   announcement.
+   ------------------------------------------------------------ */
+function doDeadline(p, L) {
+  const data = loadData(L.paths);
+  const was = data.SEASON.nextAdvance || "";
+
+  const changed = updateNextAdvance(L.paths.league, p.next);
+
+  if (!changed) {
+    console.log(`\n  ${L.dir}/league-data.js already said "${p.next}". Nothing to write.\n`);
+    return { changed: false };
+  }
+
+  console.log(
+    `\n  ${L.label} deadline by ${p.actor}: "${was}" → "${p.next}" ` +
+      `(still on ${weekLabel(Number(data.SEASON.currentWeek) || 0).toLowerCase()})\n`
+  );
+
+  return {
+    changed: true,
+    commit: `${L.label}: deadline → ${p.next || "(cleared)"} (via ${p.actor})`,
+    summary: `Deadline changed from "${was}" to "${p.next || "(cleared)"}"`,
   };
 }
 
@@ -421,7 +480,11 @@ async function main() {
   const p = validate(raw);
   const L = resolveLeague(p.league);
 
-  const result = p.action === "scores" ? doScores(p, L) : await doAdvance(p, L);
+  let result;
+  if (p.action === "scores") result = doScores(p, L);
+  else if (p.action === "deadline") result = doDeadline(p, L);
+  else result = await doAdvance(p, L);
+
   emit(result);
 }
 

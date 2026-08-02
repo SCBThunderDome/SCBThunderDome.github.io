@@ -307,6 +307,30 @@ function updateSeason(leagueFile, week, statusLine, nextAdvance) {
   return true;
 }
 
+/* Rewrite ONLY the deadline, leaving currentWeek and statusLine
+   exactly as they are. This is the "we're still on week 4 but Tuesday
+   turned into Thursday" case, which happens often enough that making
+   people fake an advance to fix it was its own hazard — an advance
+   posts to Discord and moves the week, neither of which is wanted here.
+   Returns false when the file already said that, same contract as
+   updateSeason(). */
+function updateNextAdvance(leagueFile, nextAdvance) {
+  const src = fs.readFileSync(leagueFile, "utf8");
+  const { open, close, body } = seasonBlock(src, path.basename(leagueFile));
+
+  const next = replaceOne(
+    body,
+    /^(\s*nextAdvance:\s*)"[^"]*"(,)/m,
+    `$1${JSON.stringify(nextAdvance)}$2`,
+    "nextAdvance"
+  );
+
+  if (next === body) return false;
+
+  fs.writeFileSync(leagueFile, src.slice(0, open) + next + src.slice(close + 1), "utf8");
+  return true;
+}
+
 function replaceOne(src, re, repl, field) {
   const matches = src.match(new RegExp(re.source, "gm")) || [];
   if (matches.length === 0) die(`could not find a \`${field}:\` assignment in the SEASON block`);
@@ -473,4 +497,12 @@ if (require.main === module) {
    identical case-insensitive lookup and identical allowed_mentions
    allowlist. A second copy would be a second place for a missing ID to
    go unnoticed. */
-module.exports = { updateSeason, buildMessage, seasonBlock, post, webhookUrl, makeMentioner };
+module.exports = {
+  updateSeason,
+  updateNextAdvance,
+  buildMessage,
+  seasonBlock,
+  post,
+  webhookUrl,
+  makeMentioner,
+};

@@ -213,6 +213,7 @@ $("signout-btn").addEventListener("click", () => {
   message($("signin-msg"), "");
   message($("scores-msg"), "");
   message($("advance-msg"), "");
+  message($("deadline-msg"), "");
 });
 
 /* ------------------------------------------------------------
@@ -251,6 +252,9 @@ async function switchLeague(slug) {
     $("advance-form").classList.remove("hidden");
     message($("advance-msg"), "");
   }
+  /* The deadline editor lives inside the advance panel and is gated by
+     the same list, so its message never outlives a league switch. */
+  message($("deadline-msg"), "");
 
   refreshWeekControls();
 }
@@ -273,6 +277,11 @@ function refreshWeekControls() {
   $("advance-week").value = String(Math.min(current + 1, 15));
 
   $("advance-next").value = data.SEASON.nextAdvance || "";
+
+  /* Seeded with what the site currently says, so the field reads as
+     "here is the deadline, edit it" rather than as a blank that might
+     mean the deadline is unset. */
+  $("deadline-next").value = data.SEASON.nextAdvance || "";
 
   $("current-week").textContent =
     `Currently on ${weekOptionLabel(current).toUpperCase()}` +
@@ -859,6 +868,77 @@ $("advance-yes").addEventListener("click", async () => {
         "warn",
         `Sent, but the site still hasn't updated after 3 minutes.\n` +
           `Reload this page in a few minutes to check before advancing again.`
+      );
+    }
+  } catch (err) {
+    message(msg, "error", err.message);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+/* ------------------------------------------------------------
+   DEADLINE — one step, also on purpose
+   ------------------------------------------------------------
+   No confirmation box here, deliberately. The advance is two-step
+   because it moves the week and pings sixteen people; this rewrites
+   one date string and can be corrected by typing a different one. A
+   confirmation on something this reversible only trains people to
+   click through confirmations.
+   ------------------------------------------------------------ */
+$("deadline-btn").addEventListener("click", async () => {
+  const btn = $("deadline-btn");
+  const msg = $("deadline-msg");
+  const next = $("deadline-next").value.trim();
+  const was = data.SEASON.nextAdvance || "";
+
+  if (next === was) {
+    message(msg, "warn", "That's already what the site says.");
+    return;
+  }
+
+  btn.disabled = true;
+  message(msg, "warn", next ? "Updating…" : "Clearing the deadline…");
+
+  try {
+    await api("/submit", {
+      code: accessCode,
+      payload: {
+        action: "deadline",
+        league: $("league-select").value,
+        /* Sent so the payload keeps the shape every action uses;
+           nothing on this path reads it to decide anything. */
+        week: Number(data.SEASON.currentWeek) || 0,
+        next,
+      },
+    });
+
+    message(msg, "warn", "Sent. Waiting for the site to publish…");
+    scrollToMessage(msg);
+
+    const fresh = await waitForPublish(
+      $("league-select").value,
+      (d) => (d.SEASON.nextAdvance || "") === next,
+      (secs) => message(msg, "warn", `Sent. Waiting for the site to publish… (${secs}s)`)
+    );
+
+    if (fresh) {
+      /* Full refresh rather than patching the one field, so the
+         "next deadline …" status line is regenerated from the file
+         that actually shipped and not from what we hoped we sent. */
+      data = fresh;
+      refreshWeekControls();
+      message(
+        msg,
+        "ok",
+        next ? `Done — coaches now see ${next}.` : "Done — the deadline is hidden on the site."
+      );
+    } else {
+      message(
+        msg,
+        "warn",
+        "Sent, but the site still hasn't updated after 3 minutes.\n" +
+          "Reload this page in a few minutes to check before sending it again."
       );
     }
   } catch (err) {

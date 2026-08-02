@@ -201,15 +201,20 @@ function checkPayload(payload, who) {
 
   const { action, league, week } = payload;
 
-  if (action !== "scores" && action !== "advance") return "unknown action";
+  if (action !== "scores" && action !== "advance" && action !== "deadline") {
+    return "unknown action";
+  }
   if (!ALLOWED_LEAGUES.includes(league)) return "unknown league";
 
   /* Which leagues this action may touch — the same split apply.js
      enforces. Today all three appear in both lists; the guard stays
-     general so a future scores-only league is still rejected here. */
-  const permitted = action === "advance" ? ADVANCE_LEAGUES : SCORE_LEAGUES;
+     general so a future scores-only league is still rejected here.
+     "deadline" edits the same SEASON block an advance does, so it is
+     gated on the same list. */
+  const isSeasonEdit = action === "advance" || action === "deadline";
+  const permitted = isSeasonEdit ? ADVANCE_LEAGUES : SCORE_LEAGUES;
   if (!permitted.includes(league)) {
-    return action === "advance"
+    return isSeasonEdit
       ? `${league} can't be advanced from the web`
       : `${league} can't be updated this way`;
   }
@@ -241,6 +246,14 @@ function checkPayload(payload, who) {
 
   if (action === "advance" && payload.confirm !== true) {
     return "advance was not confirmed";
+  }
+
+  /* Shape only — apply.js re-checks the character allowlist and the
+     length. An empty string is allowed on purpose: that's how the
+     deadline badge gets cleared. */
+  if (action === "deadline") {
+    if (typeof payload.next !== "string") return "missing deadline text";
+    if (payload.next.length > 120) return "that deadline is too long";
   }
 
   return null;

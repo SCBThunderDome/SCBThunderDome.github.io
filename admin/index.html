@@ -406,6 +406,23 @@ details.entered .entered-body .game:first-child { border-top: 1px solid var(--li
 .confirm-box p { margin: 0 0 14px; color: var(--chalk); font-size: 15px; line-height: 1.55; }
 .confirm-box .what { font-family: var(--font-mono); color: var(--gold-bright); }
 
+/* The deadline editor sits under the advance form inside the same
+   panel — same subject, far lower stakes. The rule and the muted
+   heading are there to keep the eye from mistaking it for a second
+   half of the advance form. */
+.subpanel {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.subpanel h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
 .week-strip {
   display: flex;
   align-items: center;
@@ -518,6 +535,22 @@ details.entered .entered-body .game:first-child { border-top: 1px solid var(--li
       </div>
 
       <div id="advance-msg"></div>
+
+      <!-- Change the deadline without advancing. Separate on purpose:
+           an advance moves the week and pings Discord, and neither of
+           those should happen because Tuesday turned into Thursday. -->
+      <div class="subpanel">
+        <h3>Change the deadline</h3>
+        <p class="hint">Updates the date coaches see on the site. Doesn't move the week and doesn't post to Discord — use this when the schedule slips. Leave it blank to hide the deadline entirely.</p>
+
+        <label class="field">
+          <span>Deadline (as it should read on the site)</span>
+          <input type="text" id="deadline-next" placeholder="Thursday, August 6 — 11:00 PM EDT" maxlength="120">
+        </label>
+        <button class="btn btn-quiet" type="button" id="deadline-btn">Update deadline</button>
+
+        <div id="deadline-msg"></div>
+      </div>
     </section>
 
   </div>
