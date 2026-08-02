@@ -195,6 +195,43 @@ reintroduce the problem.
 The long line is sized to the box and the short line is set to match its
 cap height and centred, so both always fit whatever the name is.
 
+## Cache busting after you change the art
+
+Discord, iMessage, Slack and Facebook cache link previews **by image
+URL**, and hold them for a long time. Replacing `og-image.png` in place
+changes nothing for anyone who has already shared the link — they keep
+seeing the old card. Browsers cache favicons at least as hard.
+
+So every icon and preview URL in both `index.html` files carries a
+version stamp:
+
+```html
+<meta property="og:image" content="https://scbthunderdome.github.io/og-image.png?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
+```
+
+**After regenerating the art, bump `?v=` in BOTH `index.html` and
+`scbthunderdome/index.html`**, then push. New shares pick up the new
+card immediately.
+
+That handles new shares. For links **already posted**, the platform
+still holds its cached copy, and only it can clear that:
+
+| Platform | How to force a re-scrape |
+|---|---|
+| Facebook, and iMessage via the same scraper | [Sharing Debugger](https://developers.facebook.com/tools/debug/) → paste URL → **Scrape Again** |
+| LinkedIn | [Post Inspector](https://www.linkedin.com/post-inspector/) |
+| Discord | No public tool. Bumping `?v=` is the fix; a previously-posted message keeps its old embed forever. |
+| Slack | Re-posting after the bump is usually enough. |
+
+**Discord is the one that matters here** and it has no purge tool — so
+bump the version *before* you share the link anywhere you care about,
+not after.
+
+To check your own browser rather than a platform, hard-refresh
+(Ctrl+Shift+R) or open a private window; the version stamp makes that
+mostly unnecessary.
+
 ## Provenance
 
 Derived from the State College Borough logo. It's the borough's artwork;
