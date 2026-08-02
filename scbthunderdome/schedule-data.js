@@ -182,7 +182,7 @@ const TEAM_SCHEDULES = [
     conference: "SEC",
     weeks: [
       { week: 0, note: "BYE" },
-      { week: 1, opponent: "FCS Midwest", location: "vs" },
+      { week: 1, opponent: "FCS Midwest", location: "vs", teamScore: 63, opponentScore: 7 },
       { week: 2, opponent: "Kansas", location: "at" },
       { week: 3, opponent: "Troy", location: "vs" },
       { week: 4, opponent: "Mississippi State", location: "at" },
