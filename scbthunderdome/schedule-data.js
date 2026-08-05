@@ -115,7 +115,7 @@ const TEAM_SCHEDULES = [
          entry to keep in sync. */
       { week: 0, opponent: "NC State", location: "vs", teamScore: 33, opponentScore: 14 },
       { week: 1, note: "BYE" },
-      { week: 2, opponent: "FCS East", location: "vs" },
+      { week: 2, opponent: "FCS East", location: "vs", teamScore: 15, opponentScore: 6 },
       { week: 3, opponent: "West Virginia", location: "vs" },
       { week: 4, opponent: "Delaware", location: "vs" },
       { week: 5, opponent: "Florida State", location: "at" },
@@ -251,7 +251,7 @@ const TEAM_SCHEDULES = [
     weeks: [
       { week: 0, note: "BYE" },
       { week: 1, opponent: "Georgia Tech", location: "at", teamScore: 10, opponentScore: 17 },
-      { week: 2, opponent: "FCS Midwest", location: "vs" },
+      { week: 2, opponent: "FCS Midwest", location: "vs", teamScore: 24, opponentScore: 17 },
       { week: 3, opponent: "Northwestern", location: "at" },
       { week: 4, opponent: "Baylor", location: "at" },
       { week: 5, opponent: "Texas Tech", location: "vs" },
