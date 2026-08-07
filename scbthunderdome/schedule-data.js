@@ -69,7 +69,7 @@ const TEAM_SCHEDULES = [
     weeks: [
       { week: 0, note: "BYE" },
       { week: 1, opponent: "Ole Miss", location: "vs", teamScore: 24, opponentScore: 55 },
-      { week: 2, opponent: "FCS Southeast", location: "vs" },
+      { week: 2, opponent: "FCS Southeast", location: "vs", teamScore: 52, opponentScore: 0 },
       { week: 3, opponent: "SMU", location: "vs" },
       { week: 4, opponent: "Wake Forest", location: "vs" },
       { week: 5, opponent: "NC State", location: "at" },
@@ -229,7 +229,7 @@ const TEAM_SCHEDULES = [
     weeks: [
       { week: 0, note: "BYE" },
       { week: 1, opponent: "FCS Midwest", location: "vs", teamScore: 41, opponentScore: 13 },
-      { week: 2, opponent: "Texas A&M", location: "at" },
+      { week: 2, opponent: "Texas A&M", location: "at", teamScore: 14, opponentScore: 30 },
       { week: 3, opponent: "Kansas", location: "at" },
       { week: 4, note: "BYE" },
       { week: 5, opponent: "Baylor", location: "vs" },
@@ -295,7 +295,7 @@ const TEAM_SCHEDULES = [
     weeks: [
       { week: 0, note: "BYE" },
       { week: 1, opponent: "Tulsa", location: "at", teamScore: 44, opponentScore: 0 },
-      { week: 2, opponent: "Oregon", location: "vs" },
+      { week: 2, opponent: "Oregon", location: "vs", teamScore: 27, opponentScore: 17 },
       { week: 3, opponent: "FCS Midwest", location: "vs" },
       { week: 4, opponent: "West Virginia", location: "at" },
       { week: 5, note: "BYE" },
