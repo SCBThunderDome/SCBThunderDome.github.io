@@ -93,6 +93,9 @@ const COACHES = [
   { name: "Traven",  team: "Missouri",       conference: "SEC", color: "#F5C542", twitch: "https://www.twitch.tv/travennn95",     espnId: "142" },  // espnId UNVERIFIED
   { name: "Tristan", team: "Wisconsin",      conference: "B1G", color: "#D63B45", twitch: "https://www.twitch.tv/tristanklinefelter", espnId: "275" },
   { name: "Zach",    team: "South Carolina", conference: "SEC", color: "#A6192E", twitch: "https://www.twitch.tv/coachlawless",   espnId: "2579" },
+  /* Joined mid-Week 2, 2026-08-06. Goes by his gamertag rather than a
+     first name — tools/config.json must use "RekenCrew" to match. */
+  { name: "RekenCrew", team: "UCLA",         conference: "B1G", color: "#2D68C4", twitch: "https://www.twitch.tv/rekencrew",     espnId: "26" },
 ];
 
 /* ------------------------------------------------------------

@@ -5,10 +5,14 @@
    team (weeks 0-8 and weeks 8-Conf Champ), overlap at week 8
    deduped by hand. Snapshot taken 2026-07-30.
 
-   All 13 coaches are represented. Every user-vs-user matchup was
+   All 14 coaches are represented. Every user-vs-user matchup was
    cross-checked against BOTH coaches' screenshots and the
-   home/away sides agree in all 12 cases — see the H2H list at the
+   home/away sides agree in all 13 cases — see the H2H list at the
    bottom of this comment.
+
+   UCLA (RekenCrew) joined 2026-08-06, mid-Week 2, and is the one
+   entry not from the 2026-07-30 snapshot. Its Week 7 game against
+   Wisconsin agrees with Wisconsin's existing screenshot.
 
    WEEK MAPPING. The in-game table lists rows 0-15 and then a
    separate "Conf Champ" row. This file follows the convention the
@@ -42,16 +46,17 @@
    and are stock real-world alignment — this league does not use
    the custom realignment the NCAA Legends leagues do.
 
-   TWO TEAMS HAVE NO USER-VS-USER GAMES AT ALL: Wisconsin and
-   Tulane. Both play a full 12-game CPU slate. That is what the
-   screenshots show, not a transcription gap — flagged to Josh in
-   case the schedule was meant to include them.
+   TULANE HAS NO USER-VS-USER GAMES AT ALL — a full 12-game CPU
+   slate. That is what the screenshots show, not a transcription
+   gap. Wisconsin was in the same boat until UCLA joined and gave
+   it the Week 7 game.
 
-   THE 12 HEAD-TO-HEAD GAMES, for cross-checking:
+   THE 13 HEAD-TO-HEAD GAMES, for cross-checking:
      W3   SMU        at Louisville
      W5   Kentucky   at South Carolina
      W7   Virginia   at SMU
      W7   Okla State at Houston
+     W7   Wisconsin  at UCLA
      W8   Colorado   at Oklahoma State
      W10  Va Tech    at SMU
      W10  Colorado   at Arizona State
@@ -314,8 +319,9 @@ const TEAM_SCHEDULES = [
 
   /* ---------------------------- B1G ---------------------------- */
   {
-    /* No user-vs-user games on this schedule — a full CPU slate.
-       Verified against both screenshots; not a transcription gap. */
+    /* Was a full CPU slate at transcription time. UCLA joining on
+       2026-08-06 turned the Week 7 trip into this team's only
+       user-vs-user game. */
     team: "Wisconsin",
     conference: "B1G",
     weeks: [
@@ -333,6 +339,32 @@ const TEAM_SCHEDULES = [
       { week: 11, opponent: "Maryland", location: "at" },
       { week: 12, opponent: "Purdue", location: "at" },
       { week: 13, opponent: "Minnesota", location: "vs" },
+      { week: 14, note: "Army-Navy Week" },
+      { week: 15, note: "Big Ten Championship" },
+    ],
+  },
+  {
+    /* RekenCrew joined the league as UCLA on 2026-08-06, mid-Week 2,
+       with the first two games already played (both wins). Only
+       user-vs-user game is Wisconsin at UCLA in Week 7; that entry is
+       mirrored on the Wisconsin schedule above. */
+    team: "UCLA",
+    conference: "B1G",
+    weeks: [
+      { week: 0, note: "BYE" },
+      { week: 1, opponent: "California", location: "at", teamScore: 48, opponentScore: 17 },
+      { week: 2, opponent: "San Diego State", location: "vs", teamScore: 31, opponentScore: 27 },
+      { week: 3, opponent: "Purdue", location: "vs" },
+      { week: 4, opponent: "Maryland", location: "at" },
+      { week: 5, note: "BYE" },
+      { week: 6, opponent: "Oregon", location: "at" },
+      { week: 7, opponent: "Wisconsin", location: "vs" },
+      { week: 8, opponent: "Michigan State", location: "vs" },
+      { week: 9, opponent: "Nevada", location: "vs" },
+      { week: 10, opponent: "Minnesota", location: "at" },
+      { week: 11, opponent: "Illinois", location: "vs" },
+      { week: 12, opponent: "Michigan", location: "at" },
+      { week: 13, opponent: "USC", location: "vs" },
       { week: 14, note: "Army-Navy Week" },
       { week: 15, note: "Big Ten Championship" },
     ],
